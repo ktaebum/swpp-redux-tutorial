@@ -19,7 +19,7 @@ class RealDetail extends Component {
       content = this.props.selectedTodo.content;
     }
     return (
-      <div className="TodoDetail" >
+      <div className="RealDetail" >
         <div className="row">
           <div className="left">
             Name:
