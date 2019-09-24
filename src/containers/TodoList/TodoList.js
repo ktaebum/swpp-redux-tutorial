@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Todo from '../../components/Todo/Todo';
-import TodoDetail from '../../components/TodoDetail/TodoDetail';
 
 import { NavLink } from 'react-router-dom';
 
@@ -9,20 +8,16 @@ import './TodoList.css';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import * as actionTypes from '../../store/actions/actionTypes';
+
+import * as actionCreators from '../../store/actions/index';
 
 class TodoList extends Component {
-  state = {
-    todos: [
-      { id: 1, title: 'SWPP', content: 'take swpp class', done: true },
-      { id: 2, title: 'Movie', content: 'watch movie', done: false },
-      { id: 3, title: 'Dinner', content: 'eat dinner', done: false }
-    ],
-    selectedTodo: null,
+  componentDidMount() {
+    this.props.onGetAll();
   }
 
   clickTodoHandler = (td) => {
-    this.props.history.push(this.props.match.url + '/' + td.id);
+    this.props.history.push('/todos/' + td.id);
   }
 
   render() {
@@ -39,22 +34,12 @@ class TodoList extends Component {
       );
     });
 
-    let todo = null;
-    if (this.state.selectedTodo) {
-      todo = <TodoDetail
-        title={this.state.selectedTodo.title}
-        content={this.state.selectedTodo.content}
-      />
-    }
     return (
       <div className="TodoList">
         <div className='title'>
           {this.props.title}
         </div>
-        <div className='todos'>
-          {todos}
-        </div>
-        {todo}
+        {todos}
         <NavLink to='/new-todo' exact>New Todo</NavLink>
       </div>
     )
@@ -70,9 +55,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onToggleTodo: (id) =>
-      dispatch({ type: actionTypes.TOGGLE_DONE, targetID: id }),
+      dispatch(actionCreators.toggleTodo(id)),
     onDeleteTodo: (id) =>
-      dispatch({ type: actionTypes.DELETE_TODO, targetID: id }),
+      dispatch(actionCreators.deleteTodo(id)),
+    onGetAll: () =>
+      dispatch(actionCreators.getTodos())
   }
 }
 
